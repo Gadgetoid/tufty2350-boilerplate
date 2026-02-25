@@ -21,8 +21,8 @@ int main() {
     psram_setup(BW_PSRAM_CS);
 
     display.set_backlight(255);
-    display.set_mode(false);
-    screen = new image_t((void *)display.get_framebuffer(), 160, 120);
+    display.set_mode(LORES | VSYNC);
+    screen = new image_t((void *)display.get_framebuffer(), display.get_width(), display.get_height());
     screen->antialias(X4);
 
     brush_t* black = new color_brush_t(rgb_color_t(0, 0, 0, 255));

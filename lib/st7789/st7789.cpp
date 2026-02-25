@@ -258,12 +258,9 @@ namespace pimoroni {
     // gpio_put(cs, 1);
   }
 
-  bool ST7789::get_mode() {
-    return this->fullres_mode;
-  }
-
-  void ST7789::set_mode(bool mode) {
-    this->fullres_mode = mode;
+  void ST7789::set_mode(unsigned mode) {
+    this->fullres_mode = mode & HIRES;
+    this->use_vsync = mode & VSYNC;
   }
 
   void ST7789::set_backlight(uint8_t brightness) {
@@ -288,7 +285,11 @@ namespace pimoroni {
     startup_hz = 0;
   }
 
-  void ST7789::set_vsync(bool sync) {
-    use_vsync = sync;
+  unsigned ST7789::get_width(void) {
+    return this->fullres_mode ? this->fullres_width : this->width;
+  }
+
+  unsigned ST7789::get_height(void) {
+    return this->fullres_mode ? this->fullres_height : this->height;
   }
 }

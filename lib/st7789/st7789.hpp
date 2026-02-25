@@ -20,6 +20,9 @@
 #define XIP_PSRAM_CACHED  _u(0x11000000)
 #define XIP_PSRAM_NOCACHE _u(0x15000000)
 
+#define HIRES 0b01
+#define LORES 0b00
+#define VSYNC 0b10
 
 namespace pimoroni {
   class ST7789 {
@@ -112,12 +115,12 @@ namespace pimoroni {
 
     void update();
     void set_backlight(uint8_t brightness);
-    void set_mode(bool mode);
-    bool get_mode();
+    void set_mode(unsigned mode);
     uint32_t *get_framebuffer();
     void command(uint8_t command, size_t len = 0, const char *data = NULL);
     void set_max_pio_clock(uint32_t hz);
-    void set_vsync(bool sync);
+    unsigned get_width(void);
+    unsigned get_height(void);
 
   private:
     void init();
