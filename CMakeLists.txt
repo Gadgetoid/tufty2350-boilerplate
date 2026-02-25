@@ -18,9 +18,13 @@ set(CMAKE_CXX_STANDARD 17)
 # Initialize the SDK
 pico_sdk_init()
 
-include(lib/picovector/picovector.cmake)
-include(lib/st7789/st7789.cmake)
-include(lib/powman/powman.cmake)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/lib")
+include_directories(${CMAKE_CURRENT_LIST_DIR}/lib)
+
+include(picovector/picovector)
+include(st7789/st7789)
+include(powman/powman)
+include(psram/psram)
 
 # Add your source files
 add_executable(${NAME}
@@ -34,15 +38,25 @@ include(common/pimoroni_bus)
 
 target_compile_definitions(powman INTERFACE TUFTY=1)
 
+# Use the first 320*240*4 bytes of PSRAM to store the ST7789 framebuffer
+target_compile_definitions(st7789 INTERFACE ST7789_FRAMEBUFFER_IN_PSRAM=1)
+
 # Don't forget to link the libraries you need!
 target_link_libraries(${NAME}
     picovector
     powman
     st7789
+    psram
     pico_stdlib
     pico_multicore
     pimoroni_i2c
     hardware_interp
+)
+
+# Configure the SD Card library for Presto
+target_compile_definitions(${NAME} PRIVATE
+  PICO_EMBED_XIP_SETUP=1
+  PICO_CLOCK_AJDUST_PERI_CLOCK_WITH_SYS_CLOCK=1
 )
 
 # create map/bin/hex file etc.

@@ -1,8 +1,13 @@
 #include "st7789.hpp"
+#include "psram.h"
 
 namespace pimoroni {
 
+#ifdef ST7789_FRAMEBUFFER_IN_PSRAM
+  uint32_t *framebuffer = new(psram) uint32_t[320 * 240];
+#else
   uint32_t __attribute__((section(".uninitialized_data"))) __attribute__ ((aligned (4))) framebuffer[320 * 240];
+#endif
   uint16_t __attribute__((section(".uninitialized_data"))) __attribute__ ((aligned (4))) linebuffer[240 * 4];
 
   // If we configure MicroPython's main.c to skip the first 320 * 240 * sizeof(uint32_t)
